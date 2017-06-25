@@ -40,6 +40,34 @@ my %card_field_specs = (
 	[ 'branchAddress',	0, 'Branch', ],
 	[ 'branchPhone',	0, 'Phone No.', ],
     ]},
+    bankacct2 =>                 { textname => 'Bank Accts', type_out => 'bankacct', fields => [
+        [ 'accountNo',          0, 'Account Number', ],
+        [ 'telephonePin',       0, 'PIN', ],
+        [ 'owner',              0, 'Name', ],
+        [ 'branchAddress',      0, 'Branch', ],
+        [ 'branchPhone',        0, 'Phone No.', ],
+    ]},
+    serialnum =>                { textname => 'Serial Numbers', type_out => 'note', fields => [
+        [ 'serialnum',          0, 'Serial #', ],
+        [ 'serialdate',         0, 'Date', ],
+        [ 'serialreseller',     0, 'Reseller', ],
+	[ 'other1',     0, 'other1', { custfield => [ $Utils::PIF::sn_identity, $Utils::PIF::k_string, 'other1' ] }],
+	[ 'other2',     0, 'other2', { custfield => [ $Utils::PIF::sn_identity, $Utils::PIF::k_string, 'other2' ] }],
+    ]},
+    softreg =>                { textname => 'Software Registration', type_out => 'note', fields => [
+        [ 'regcode',          0, 'Registration Code',{ custfield => [ $Utils::PIF::sn_identity, $Utils::PIF::k_string, 'Registration Code' ] } ],
+        [ 'email',              0, 'Email', ],
+        [ 'other1',     0, 'other1', { custfield => [ $Utils::PIF::sn_identity, $Utils::PIF::k_string, 'other1' ] }],
+        [ 'other2',     0, 'other2', { custfield => [ $Utils::PIF::sn_identity, $Utils::PIF::k_string, 'other2' ] }],
+        [ 'other3',     0, 'other3', { custfield => [ $Utils::PIF::sn_identity, $Utils::PIF::k_string, 'other3' ] }],
+    ]},
+    identification =>           { textname => 'Identification', type_out => 'membership', fields => [
+        [ 'membership_no',      0, 'Number', ],
+        [ 'member_name',        0, 'Name', ],
+        [ '_date',              0, 'Date', ],
+        [ 'other1',     0, 'other1', { custfield => [ $Utils::PIF::sn_identity, $Utils::PIF::k_string, 'other1' ] }],
+        [ 'other2',     0, 'other2', { custfield => [ $Utils::PIF::sn_identity, $Utils::PIF::k_string, 'other2' ] }],
+    ]},
     birthdays => 		{ textname => 'Birthdays', type_out => 'note', fields => [
 	[ 'date',		0, 'Date', ],
     ]},
@@ -108,6 +136,20 @@ my %card_field_specs = (
 	[ 'url',		0, 'URL', ],
 	[ 'username',		0, 'Username', ],
 	[ 'password',		0, 'Password', ],
+    ]},
+    duplicate =>                { textname => 'Web Logins Duplicate', type_out => 'login', fields => [
+        [ 'url',                0, 'URL', ],
+        [ 'username',           0, 'Username', ],
+        [ 'password',           0, 'Password', ],
+	[ 'password2',           0, 'Password2', { custfield => [ $Utils::PIF::sn_main, $Utils::PIF::k_string, 'password2' ] }],
+	[ 'password2',           0, 'Password3', { custfield => [ $Utils::PIF::sn_main, $Utils::PIF::k_string, 'password3' ] }],	
+    ]},
+    password =>                { textname => 'Password', type_out => 'login', fields => [
+        [ 'username',           0, 'Username', ],
+        [ 'password',           0, 'Password', ],
+        [ 'system',             0, 'System', { custfield => [ $Utils::PIF::sn_main, $Utils::PIF::k_string, 'system' ] }],
+        [ 'password2',           0, 'Password2', { custfield => [ $Utils::PIF::sn_main, $Utils::PIF::k_string, 'password2' ] }],
+        [ 'password2',           0, 'Password3', { custfield => [ $Utils::PIF::sn_main, $Utils::PIF::k_string, 'password3' ] }],
     ]},
     membership =>		{ textname => 'Memberships', fields => [
 	[ 'membership_no',	0, 'Account Number', ],
@@ -256,7 +298,7 @@ sub do_import {
 	else {
 	    $itype = $ll_typeMap{$msecure_type};
 	    $otype = $card_field_specs{$itype}{'type_out'} // $itype;
-	    $cmeta{'title'} = join ': ', $msecure_type, $cmeta{'title'}		if $itype ne $otype;
+	    #$cmeta{'title'} = join ': ', $msecure_type, $cmeta{'title'}		if $itype ne $otype;
 
 	    # skip all types not specifically included in a supplied import types list
 	    next if defined $imptypes and (! exists $imptypes->{$itype});
